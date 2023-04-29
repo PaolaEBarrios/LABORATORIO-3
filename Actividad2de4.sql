@@ -2,6 +2,7 @@
 
 --1
 --La patente, apellidos y nombres del agente que labró la multa y monto de aquellas multas que superan el monto promedio.
+use AgenciaTransito
 
 SELECT M.PATENTE, A.Apellidos,A.Nombres, M.monto FROM AGENTES AS A
 inner join Multas as m 
@@ -43,16 +44,55 @@ where a.IdAgente not in
 --4
 --Los apellidos y nombres de los agentes que no hayan labrado multas por 'Exceso de velocidad'.
 
+Select a.Apellidos,a.Nombres from Agentes as a
+where a.IdAgente not in
+(
 
+	select a.IdAgente from multas as m
+	inner join agentes as a
+	on a.IdAgente=m.IdAgente
+	inner join TipoInfracciones as ti
+	on ti.IdTipoInfraccion=m.IdTipoInfraccion
+	where ti.descripcion ='Exceso de velocidad'
+)
+order by a.Apellidos asc
 
 --5
 --Los legajos, apellidos y nombre de los agentes que hayan labrado multas de todos los tipos de infracciones existentes.
---6
---Los legajos, apellidos y nombres de los agentes que hayan labrado más cantidad de multas que la cantidad de multas generadas por un radar (multas con IDAgente con valor NULL)
---7
---Por cada agente, listar legajo, apellidos, nombres, cantidad de multas realizadas durante el día y cantidad de multas realizadas durante la noche.
 
---NOTA: El turno noche ocurre pasadas las 20:00 y antes de las 05:00.
+Select a.Legajo,a.Apellidos,a.Nombres from agentes as a
+inner join multas as m
+on m.IdAgente=a.IdAgente
+inner join TipoInfracciones as ti
+on ti.IdTipoInfraccion=m.IdTipoInfraccion
+group by a.legajo,a.apellidos,a.nombres
+having count(distinct m.IdTipoInfraccion) >=
+(
+	Select count(ti.IdTipoInfraccion) from TipoInfracciones as ti
+)
+
+
+--6
+--Los legajos, apellidos y nombres de los agentes que hayan labrado más cantidad de multas que la cantidad de multas generadas por un radar
+--(multas con IDAgente con valor NULL)
+
+Select a.Legajo,a.Apellidos,a.Nombres from Agentes as a
+inner join multas as m
+on m.IdAgente=a.IdAgente
+group by a.Legajo,a.Apellidos,a.Nombres
+having count(m.idagente) >
+(
+	Select count(m.IdMulta) from Multas as m
+	where m.IdAgente is null
+)
+
+--7
+--Por cada agente, listar legajo, apellidos, nombres, cantidad de multas realizadas durante el día 
+--y cantidad de multas realizadas durante la noche.
+--NOTA: 
+--El turno noche ocurre pasadas las 20:00 y antes de las 05:00.
+
+
 --8
 --Por cada patente, el total acumulado de pagos realizados con medios de pago no electrónicos y el total acumulado de pagos realizados con algún medio de pago electrónicos.
 --9
