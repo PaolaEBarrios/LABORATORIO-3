@@ -24,13 +24,27 @@ Where m.Monto >
 	ON TP.IdTipoInfraccion=M.IdTipoInfraccion
 	WHERE TP.Descripcion='No respetar señal de stop'
 )
+
 --3
 --Los apellidos y nombres de los agentes que no hayan labrado multas en los dos primeros meses de 2023.
 
+Select a.Apellidos,a.Nombres from agentes as a
+where a.IdAgente not in
+(
+
+	Select a.IdAgente from Multas as m
+	inner join Agentes as a
+	on a.IdAgente=m.IdAgente
+	where year(m.FechaHora) = 2023 and (MONTH(m.FechaHora) between 01 and 02)
+	
+)
 
 
 --4
 --Los apellidos y nombres de los agentes que no hayan labrado multas por 'Exceso de velocidad'.
+
+
+
 --5
 --Los legajos, apellidos y nombre de los agentes que hayan labrado multas de todos los tipos de infracciones existentes.
 --6
