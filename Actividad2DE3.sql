@@ -1,5 +1,5 @@
 --Actividad 2.3
-
+use AgenciaTransito
 --1
 --Listado con la cantidad de agentes
 Select COUNT(*) as cantAgentes from Agentes as a
@@ -129,9 +129,19 @@ having count(p.idmediopago)>3
 --18
 --Los legajos, apellidos y nombres de los agentes que hayan labrado más de 2 multas con tipos de infracciones distintas.
 
+Select a.Legajo,a.Apellidos,a.Nombres from Agentes as a
+inner join Multas as m
+on m.IdAgente=a.IdAgente
+group by a.Legajo,a.Apellidos,a.nombres
+having count(distinct m.IdTipoInfraccion)>2
+
 
 --19
 --El total recaudado en concepto de pagos discriminado por nombre de medio de pago.
+	Select distinct mp.Nombre,sum(p.Importe) as 'TOTAL RECAUDADO' from MediosPago as mp
+	inner join pagos as p
+	on p.IDMedioPago=mp.IDMedioPago
+	group by mp.nombre
 
 
 --20
@@ -147,4 +157,15 @@ having count(p.idmediopago)>3
 --Argentina          País           $xxxx
 
 
+select l.Localidad as Descripcion, sum(pag.Importe)
+ from Localidades as l
+ inner join multas as m 
+ on m.IDLocalidad=l.IDLocalidad
+ inner join pagos as pag
+ on pag.IDMulta=m.IdMulta
+ group by l.Localidad
+union 
+select p.Provincia from Provincias as p
 
+order by l.Localidad
+ 
