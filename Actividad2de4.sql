@@ -92,6 +92,22 @@ having count(m.idagente) >
 --NOTA: 
 --El turno noche ocurre pasadas las 20:00 y antes de las 05:00.
 
+Select 
+a.legajo,a.Apellidos,a.Nombres,
+(select count(m.IdAgente) from multas as m where (datepart(hour, m.FechaHora) between '20' and '23' or datepart(hour,m.FechaHora) between '1' and '4' or datepart(hour,m.FechaHora) = '00')  and a.IdAgente=m.IdAgente) as 'multas de noche',
+(select count(m.IdAgente) from multas as m where datepart(hour, m.FechaHora) between '5' and '19' and a.IdAgente=m.IdAgente) as 'multas de dia' 
+from agentes as a
+group by a.IdAgente,a.Legajo,a.Apellidos,a.Nombres
+
+
+
+--select a.Apellidos, count(*) as 'multas', m.FechaHora from multas as m
+--inner join agentes as a
+--on a.IdAgente=m.IdAgente
+--where a.Apellidos='Gomez' or a.Apellidos='Sanchez' or a.Apellidos = 'Lopez' or a.Apellidos= 'Hernandez'
+--group by a.Legajo,m.Fechahora,a.Apellidos
+--order by a.Apellidos asc
+-------------------------------------------------------------------------------------------------------------
 
 --8
 --Por cada patente, el total acumulado de pagos realizados con medios de pago no electrónicos y el total acumulado de pagos realizados con algún medio de pago electrónicos.
