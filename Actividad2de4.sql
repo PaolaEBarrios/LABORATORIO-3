@@ -110,13 +110,70 @@ group by a.IdAgente,a.Legajo,a.Apellidos,a.Nombres
 -------------------------------------------------------------------------------------------------------------
 
 --8
---Por cada patente, el total acumulado de pagos realizados con medios de pago no electrónicos y el total acumulado de pagos realizados con algún medio de pago electrónicos.
+--Por cada patente, el total acumulado de pagos realizados con medios de pago no electrónicos
+--y el total acumulado de pagos realizados con algún medio de pago electrónicos.
+
+Select distinct Patente,
+(Select sum(p.importe))
+
+
+from Multas as M
+
+
+
+
 --9
 --La cantidad de agentes que hicieron igual cantidad de multas por la noche que durante el día.
+
+select count(m.IdAgente) from agentes as a
+inner join multas as m
+on m.IdAgente=a.IdAgente
+where 
+	(datepart(hour, m.FechaHora) between '20' and '23' or datepart(hour,m.FechaHora) between '1' and '4' 
+		or datepart(hour,m.FechaHora) = '00')
+		
+(select count(m.IdAgente) from multas as m where datepart(hour, m.FechaHora) between '5' and '19' and a.IdAgente=m.IdAgente)
+
+
+
 --10
---Las patentes que, en total, hayan abonado más en concepto de pagos con medios no electrónicos que pagos con medios electrónicos. Pero debe haber abonado tanto con medios de pago electrónicos como con medios de pago no electrónicos.
+--Las patentes que, en total, hayan abonado más en concepto de pagos
+--con medios no electrónicos que pagos con medios electrónicos.
+--Pero debe haber abonado tanto con medios de pago electrónicos como con medios de pago no electrónicos.
+Select m.Patente
+from multas as m
+inner join pagos as p
+on p.IDMulta=m.IdMulta
+inner join MediosPago as mp
+on mp.IDMedioPago=p.IDMedioPago
+where
+(
+	select sum(p.Importe) from pagos as p 
+	inner join 
+	MediosPago as mp 
+	on mp.IDMedioPago=p.IDMedioPago
+	having  count(p.IDMedioPago)>1 and mp.Nombre='Efectivo'
+) < ---es menor a
+(
+	select sum(p.Importe) from pagos as p inner join 
+	MediosPago as mp
+	on mp.IDMedioPago=p.IDMedioPago
+	having count (p.IDMedioPago)>1 and mp.Nombre not like 'Efectivo'
+)
+
+
+
+select m.patente, p.Importe,mp.Nombre from multas as m
+inner join pagos as p
+on p.IDMulta= m.IdMulta
+inner join MediosPago as mp
+on mp.IDMedioPago=p.IDMedioPago
+group by m.Patente,p.Importe,mp.Nombre
+
 --11
 --Los legajos, apellidos y nombres de agentes que hicieron más de dos multas durante el día y ninguna multa durante la noche.
+
+
 --12
 --La cantidad de agentes que hayan registrado más multas que la cantidad de multas generadas por un radar (multas con IDAgente con valor NULL)
 
