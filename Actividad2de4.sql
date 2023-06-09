@@ -1,7 +1,7 @@
 --Actividad 2.4
 
 --1
---La patente, apellidos y nombres del agente que labrÛ la multa y monto de aquellas multas que superan el monto promedio.
+--La patente, apellidos y nombres del agente que labr√≥ la multa y monto de aquellas multas que superan el monto promedio.
 use AgenciaTransito
 
 SELECT M.PATENTE, A.Apellidos,A.Nombres, M.monto FROM AGENTES AS A
@@ -15,7 +15,7 @@ order by m.Patente asc
 
 
 --2
---Las multas que sean m·s costosas que la multa m·s costosa por 'No respetar seÒal de stop'.
+--Las multas que sean m√°s costosas que la multa m√°s costosa por 'No respetar se√±al de stop'.
 
 SELECT * FROM MULTAS AS M
 Where m.Monto > 
@@ -23,7 +23,7 @@ Where m.Monto >
 	SELECT MAX(M.MONTO) FROM MULTAS AS  M
 	INNER JOIN TipoInfracciones AS TP
 	ON TP.IdTipoInfraccion=M.IdTipoInfraccion
-	WHERE TP.Descripcion='No respetar seÒal de stop'
+	WHERE TP.Descripcion='No respetar se√±al de stop'
 )
 
 --3
@@ -73,7 +73,7 @@ having count(distinct m.IdTipoInfraccion) >=
 
 
 --6
---Los legajos, apellidos y nombres de los agentes que hayan labrado m·s cantidad de multas que la cantidad de multas generadas por un radar
+--Los legajos, apellidos y nombres de los agentes que hayan labrado m√°s cantidad de multas que la cantidad de multas generadas por un radar
 --(multas con IDAgente con valor NULL)
 
 Select a.Legajo,a.Apellidos,a.Nombres from Agentes as a
@@ -87,7 +87,7 @@ having count(m.idagente) >
 )
 
 --7
---Por cada agente, listar legajo, apellidos, nombres, cantidad de multas realizadas durante el dÌa 
+--Por cada agente, listar legajo, apellidos, nombres, cantidad de multas realizadas durante el d√≠a 
 --y cantidad de multas realizadas durante la noche.
 --NOTA: 
 --El turno noche ocurre pasadas las 20:00 y antes de las 05:00.
@@ -110,6 +110,7 @@ group by a.IdAgente,a.Legajo,a.Apellidos,a.Nombres
 -------------------------------------------------------------------------------------------------------------
 
 --8
+<<<<<<< HEAD
 --Por cada patente, el total acumulado de pagos realizados con medios de pago no electrÛnicos
 --y el total acumulado de pagos realizados con alg˙n medio de pago electrÛnicos.
 
@@ -174,7 +175,19 @@ group by m.Patente,p.Importe,mp.Nombre
 --Los legajos, apellidos y nombres de agentes que hicieron m·s de dos multas durante el dÌa y ninguna multa durante la noche.
 
 
+=======
+--Por cada patente, el total acumulado de pagos realizados con medios de pago no electr√≥nicos y el total acumulado de pagos realizados con alg√∫n medio de pago electr√≥nicos.
+--9
+--La cantidad de agentes que hicieron igual cantidad de multas por la noche que durante el d√≠a.
+--10
+--Las patentes que, en total, hayan abonado m√°s en concepto de pagos con medios no electr√≥nicos que pagos con medios electr√≥nicos. Pero debe haber abonado tanto con medios de pago electr√≥nicos como con medios de pago no electr√≥nicos.
+--11
+--Los legajos, apellidos y nombres de agentes que hicieron m√°s de dos multas durante el d√≠a y ninguna multa durante la noche.
+>>>>>>> 16227de0e0b0a09fa3e1f82fd7dc9e2f2856ef2f
 --12
---La cantidad de agentes que hayan registrado m·s multas que la cantidad de multas generadas por un radar (multas con IDAgente con valor NULL)
+--La cantidad de agentes que hayan registrado m√°s multas que la cantidad de multas generadas por un radar (multas con IDAgente con valor NULL)
+
+--probando una actualizcion de git remota para local
+
 
 
